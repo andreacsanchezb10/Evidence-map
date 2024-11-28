@@ -61,7 +61,7 @@ p_year_publication<-ggplot(year_stage, aes(x = publication_year, y = n_studies,
 p_year_publication
 #11*8.21
 
-#### Data distribution per  process stage and metric ----
+#### Data distribution per stage and metric ----
 table(data_clean$y_metric_recla)
 y_metric_recla_total<- data_clean%>%
   group_by(y_metric_recla_2, y_metric_recla)%>%
@@ -106,7 +106,8 @@ levels_m_dp_recla<- c("Agro-aquaculture","Rotational grazing","Fallow","Agro-sil
                                "Embedded seminatural habitats","Cover crops", "Intercropping","Crop rotation","Agroforestry")
 
 p_sytems_stages<-
-  ggplot(stages_systems, aes(x = n_studies, y = factor(m_dp_recla, levels_m_dp_recla),fill=factor(y_metric_recla_2, levels = levels_metric_recla_2))) +
+  ggplot(stages_systems, aes(x = n_studies, y = factor(m_dp_recla, levels_m_dp_recla),
+                             fill=factor(y_metric_recla_2, levels = levels_metric_recla_2))) +
   geom_bar(stat="identity")+
   scale_fill_manual(
     values=c("#860dcf", "#265DAB" ,"#DF5C24","#f0e442","#009e73"),
@@ -210,8 +211,8 @@ world<-
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, "cm"))+
-  labs(x = NULL, y = NULL)
-  #coord_map()
+  labs(x = NULL, y = NULL)+
+  coord_map("mollweide",xlim=c(-180,180))
 world
 
 # Data distribution by region x adoption stage and region x systems
@@ -472,9 +473,9 @@ p_factor_regions<-
     y=factor(factor_category, levels =c("Total number of models","Other",
                                         
                                         "P&I context\n(Value chain)","P&I context\n(General)",
-                                        "P&I context\n(Land tenure)","Farm management", 
+                                        "P&I context\n(Land tenure)",
                                         "P&I context\n(Financial risk management)","Farmers' behaviour",
-                                        "Social capital","Biophysical context","Physical capital", 
+                                        "Social capital","Farm management", "Biophysical context","Physical capital", 
                                         "P&I context\n(Access to knowledge)","Financial capital",
                                         "Natural capital","Human capital")),
     fill=combined_fill, color = combined_fill))+
@@ -487,9 +488,9 @@ p_factor_regions<-
                    position = "top")+
   scale_y_discrete(labels=c("Total number of models","Other",
                             "P&I context\n(Value chain)","P&I context\n(General)",
-                            "P&I context\n(Land tenure)","Farm management", 
+                            "P&I context\n(Land tenure)", 
                            "P&I context\n(Financial risk management)","Farmers' behaviour",
-                           "Social capital","Biophysical context","Physical capital", 
+                           "Social capital","Farm management","Biophysical context","Physical capital", 
                            "P&I context\n(Access to knowledge)","Financial capital",
                            "Natural capital","Human capital"))+
   theme(axis.title = element_blank(),
@@ -717,42 +718,6 @@ table(world_profitability$n_studies)
 table(world_profitability$profitability_range)
 sort(unique(world_profitability$studies_profitability_range))
 sort(unique(world_profitability$n_studies_range))
-profitability_fill<-  c("0_0"="#D5D1D0",
-                        "0_0.01-0.0755"="#D5D1D0",
-                        "0_0.0755-0.1995" ="#B1A807",
-                        "0_0.1995-0.2978"="#778D06",
-                        "0_0.2978-0.3185"="#3C7104",
-                        "0_0.3185+"  ="#015603",
-                        
-                        "1-5_0"  ="#DD893B",
-                        "1-5_0.01-0.0755"="#B78F36",
-                        "1-5_0.0755-0.1995"="#90874B",
-                        "1-5_0.1995-0.2978"="#6A7E60",
-                        "1-5_0.2978-0.3185" ="#437675",
-                        "1-5_0.3185+"="#1D6D8A",
-                        
-                        "6-10_0"="#DE5E2C",
-                        "6-10_0.01-0.0755"="#AB694C",
-                        "6-10_0.0755-0.1995"="#87645F",
-                        "6-10_0.1995-0.2978"="#646073",
-                        "6-10_0.2978-0.3185" ="#405B86",
-                        "6-10_0.3185+"="#1D5799",
-                        
-                        "11-25_0"="#DE331E",
-                        "11-25_0.01-0.0755"="#B7363A",
-                        "11-25_0.0755-0.1995"="#913955",
-                        "11-25_0.1995-0.2978"="#6A3C71",
-                        "11-25_0.2978-0.3185" ="#443F8C",
-                        "11-25_0.3185+"="#1D42A8",
-                        
-                        "26-50_0"="#DF080F",
-                        "26-50_0.01-0.0755"="#B80B33",
-                        "26-50_0.0755-0.1995"="#910E58",
-                        "26-50_0.1995-0.2978"="#6B107C",
-                        "26-50_0.2978-0.3185" ="#4413A1",
-                        "26-50_0.3185+"="#1D16C5")
-
-
 profitability_fill<-  c("0_0"="grey99",
                         "0_0.01-0.0755"="grey99",
                         "0_0.0755-0.1995" ="#FEC9C0",
@@ -802,7 +767,7 @@ plot_profitability_studies<-
   
   geom_polygon(aes(group = group,fill= studies_profitability_range),colour="grey35",
                size = 0.3, show.legend = TRUE) +
-  coord_fixed() +
+ # coord_fixed() +
   # geom_polygon(aes(group = group),colour="grey25",fill="grey",
   #             size = 0.3, show.legend = TRUE) 
   scale_fill_manual(values=profitability_fill)+
@@ -814,7 +779,8 @@ plot_profitability_studies<-
         axis.text.y = element_blank(),
         axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, "cm"))+
-  labs(x = NULL, y = NULL)
+  labs(x = NULL, y = NULL)+
+  coord_map("mollweide",xlim=c(-180,180))
 
 plot_profitability_studies 
 
@@ -1010,9 +976,6 @@ for (region in unique_regions) {
   plot_dendrogram(region)
 }
 
-
-
-
 sum(region_models$total_models)
 # Count the number of study_model_id that include each factor_category and calculate the percentage
 model_category_counts <- data_clean %>%
@@ -1120,7 +1083,7 @@ region_selected_data <-  region.pivoted_data%>%
   select(3:16)
 most_common_2 <- find_most_common_combinations(region_selected_data, 2)
 most_common_3 <- find_most_common_combinations(region_selected_data, 3)
-most_common_4 <- find_most_common_combinations(region_selected_data, 4)
+most_common_4 <- find_most_common_combinations(region_selected_data, 14)
 
 
 #### Data distribution per factor class ----
@@ -1130,7 +1093,7 @@ factor_category<- data_clean%>%
 
 names(factor_category)
 head(factor_category)
-length(sort(unique(factor_category$study_model_id))) #342
+length(sort(unique(factor_category$study_model_id))) #354
 length(sort(unique(factor_category$factor_category))) #14
 
 factor_category_models<- factor_category%>%
@@ -1164,21 +1127,24 @@ factor_combinations<-factor_category%>%
   select(study_model_id, factor_category)
   
 sort(unique(factor_combinations$factor_category))
+
 pivoted_data <- factor_combinations %>%
   spread(key = factor_category, value = factor_category) %>%
   mutate(across(-study_model_id, ~ replace(., !is.na(.), 1))) %>%
   mutate(across(-study_model_id, ~ replace(., is.na(.), 0)))
 
 
+
 # Assuming your data is already loaded into a dataframe called pivoted_data
 # Select columns 2 to 16
 selected_data <- pivoted_data[, 2:15]
+
 head(selected_data)
 
 # Create a binary matrix for clustering based on the selected data
 binary_matrix <- as.matrix(selected_data)
 binary_matrix
-
+head(b)
 # Compute the distance matrix using the count of co-occurrences
 comb_dist <- dist(t(binary_matrix), method = "binary")
 
@@ -1215,9 +1181,9 @@ desired_order <- c("Human capital","Natural capital", "Financial capital",
 # Create category_order dataframe using the custom order
 category_order <- selected_data %>%
   summarise(across(everything(), ~ sum(. == "1"))) %>%
-  pivot_longer(cols = everything(), names_to = "category", values_to = "count") %>%
-  mutate(category = factor(category, levels = desired_order)) %>%
-  arrange(category)
+  pivot_longer(cols = everything(), names_to = "category", values_to = "count") 
+  #mutate(category = factor(category, levels = desired_order)) %>%
+  #arrange(category)
 
 # Reorder columns in selected_data based on the custom order
 ordered_selected_data <- selected_data %>%
@@ -1485,8 +1451,9 @@ most_common_12 <- find_most_common_combinations(selected_data, 12)
 most_common_13 <- find_most_common_combinations(selected_data, 13)
 most_common_14 <- find_most_common_combinations(selected_data, 14)
 
-most_common_15 <- find_most_common_combinations(selected_data, 15)
-
+prueba<-rbind(most_common_3,most_common_4,most_common_5,most_common_6,
+      most_common_7,most_common_8,most_common_9)%>%
+  filter(count!=0)
 
 
 
