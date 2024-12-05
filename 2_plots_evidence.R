@@ -68,7 +68,7 @@ y_metric_recla_total<- data_clean%>%
   summarise(n_studies=n_distinct(study_id),
             n_models= n_distinct(study_model_id)) %>%
   ungroup()
-
+sum(y_metric_recla_total$n_models)
 stages<- data_clean%>%
   group_by(y_metric_recla_2)%>%
   summarise(n_studies=n_distinct(study_id),
@@ -713,11 +713,46 @@ group_by(m_un_subregion) %>%
             long = mean(long)) %>%
   ungroup()
 
-
 table(world_profitability$n_studies)
 table(world_profitability$profitability_range)
 sort(unique(world_profitability$studies_profitability_range))
 sort(unique(world_profitability$n_studies_range))
+
+correlation<- world_profitability%>%
+  select(region,REGION_UN,SUBREGION,MEAN,n_studies)%>%
+  filter(SUBREGION!="0")%>%
+  distinct(region,REGION_UN,SUBREGION,MEAN,n_studies)
+
+sort(unique(correlation$region))
+write.csv(correlation,"C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/checked_data/evidence_paper/correlation.csv", row.names=FALSE)
+
+library("ggpubr")
+ggscatter( subset(correlation, REGION_UN=="Africa"), x = "MEAN", y = "n_studies", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "suitability", ylab = "n_studies")
+
+ggscatter( subset(correlation, REGION_UN=="Asia"), x = "MEAN", y = "n_studies", 
+           add = "reg.line", conf.int = TRUE, 
+           cor.coef = TRUE, cor.method = "pearson",
+           xlab = "suitability", ylab = "n_studies")
+
+ggscatter( subset(correlation, REGION_UN=="Americas"), x = "MEAN", y = "n_studies", 
+           add = "reg.line", conf.int = TRUE, 
+           cor.coef = TRUE, cor.method = "pearson",
+           xlab = "suitability", ylab = "n_studies")
+
+ggscatter( subset(correlation, REGION_UN=="Europe"), x = "MEAN", y = "n_studies", 
+           add = "reg.line", conf.int = TRUE, 
+           cor.coef = TRUE, cor.method = "pearson",
+           xlab = "suitability", ylab = "n_studies")
+
+ggscatter( subset(correlation, REGION_UN=="Oceania"), x = "MEAN", y = "n_studies", 
+           add = "reg.line", conf.int = TRUE, 
+           cor.coef = TRUE, cor.method = "pearson",
+           xlab = "suitability", ylab = "n_studies")
+
+
 profitability_fill<-  c("0_0"="grey99",
                         "0_0.01-0.0755"="grey99",
                         "0_0.0755-0.1995" ="#FEC9C0",

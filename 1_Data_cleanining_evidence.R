@@ -12,6 +12,8 @@ data <- data[-1,]
 data <- data[-1,]
 
 length(sort(unique(data$study_id))) # Number of articles 193
+sort(unique(data$study_id)) # Number of articles 193
+
 sort(unique(data$y_metric_recla)) #28
 sort(unique(data$y_metric_recla_2)) #5
 #"adoption" "awareness" "disadoption" "intensity of adoption" "interest"
