@@ -333,7 +333,7 @@ p_regions<-
     #breaks = c(0,25,50,75,100),
     #labels = c("0", "25", "50", "75", "100")) +
   scale_fill_manual(
-    values = c("#843272","#CA866A","#A29FE5", "#fae8c0",
+    values = c("#843272","#CA866A","#fae8c0","#A29FE5", 
                "#A4B795"), name="")+
   theme(axis.title.y = element_blank(),
         axis.title.x = element_text(color="black", size=13, family = "sans", face = "bold", vjust = -1,
@@ -447,7 +447,7 @@ fill <- c("Africa_0"= "white" , "Africa_1-5"="#F3E7F0","Africa_6-10" ="#E4B5DA",
           "Total_0"= "white" , "Total_1-5"="#F8F2F2","Total_6-10" ="#E9E4E4","Total_11-25"="#DAD6D7",
           "Total_26-50"="#BDBABB","Total_51-75"= "#969798","Total_76-100"="#818284",
           
-          "Total_total"="grey10","Africa_total"="grey10","Asia_total"="grey10","Europe_total"="grey10","Northern America_total"="grey10","Latin America and the Caribbean_total"="grey10")
+          "Total_total"="#545454","Africa_total"="#545454","Asia_total"="#545454","Europe_total"="#545454","Northern America_total"="#545454","Latin America and the Caribbean_total"="#545454")
 
 colour <- c("Africa_0"= "black" , "Africa_1-5"="black","Africa_6-10" ="black","Africa_11-25"="black",
             "Africa_26-50"="black","Africa_51-75"= "black","Africa_76-100"="black",
@@ -469,7 +469,7 @@ p_factor_regions
 sort(unique(factors_regions$factor_category))
 p_factor_regions<-
   ggplot(factors_regions,aes(
-    x=factor(m_un_region, levels = c("Total","Africa","Asia", "Europe", "Latin America and the Caribbean","Northern America")),
+    x=factor(m_un_region, levels = c("Total","Africa","Asia","Northern America", "Latin America and the Caribbean", "Europe")),
     y=factor(factor_category, levels =c("Total number of models","Other",
                                         
                                         "P&I context\n(Value chain)","P&I context\n(General)",
@@ -484,7 +484,7 @@ p_factor_regions<-
   scale_color_manual(values = colour) +
   
   geom_text(aes(label=percentage), color="black",size=4,family = "sans")+
-  scale_x_discrete(labels=c("Total","Africa","Asia","Europe", "Latin\nAmerica","Northern\nAmerica"),
+  scale_x_discrete(labels=c("Total","Africa","Asia","Northern\nAmerica","Latin\nAmerica","Europe"),
                    position = "top")+
   scale_y_discrete(labels=c("Total number of models","Other",
                             "P&I context\n(Value chain)","P&I context\n(General)",
@@ -675,6 +675,18 @@ world_profitability <- ggplot2::map_data("world") %>%
                                    right = FALSE))%>%
   mutate(studies_profitability_range= paste(n_studies_range,"_",profitability_range,sep=""))
 
+t4_profitability<-world_profitability%>%
+  filter(profitability_range=="0.3185+")
+length(unique(t4_profitability$region))
+
+t4_1_5_profitability<-t4_profitability%>%
+  filter(studies_profitability_range!="0_0.3185+")
+
+length(unique(t4_1_5_profitability$region))
+
+t4_6_more_profitability<-t4_1_5_profitability%>%
+  filter(studies_profitability_range!="1-5_0.3185+")
+length(unique(t4_6_more_profitability$region))
 
 
 subregions_plot <-ggplot2::map_data("world") %>%
@@ -726,76 +738,49 @@ correlation<- world_profitability%>%
 sort(unique(correlation$region))
 write.csv(correlation,"C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/checked_data/evidence_paper/correlation.csv", row.names=FALSE)
 
-library("ggpubr")
-ggscatter( subset(correlation, REGION_UN=="Africa"), x = "MEAN", y = "n_studies", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "suitability", ylab = "n_studies")
-
-ggscatter( subset(correlation, REGION_UN=="Asia"), x = "MEAN", y = "n_studies", 
-           add = "reg.line", conf.int = TRUE, 
-           cor.coef = TRUE, cor.method = "pearson",
-           xlab = "suitability", ylab = "n_studies")
-
-ggscatter( subset(correlation, REGION_UN=="Americas"), x = "MEAN", y = "n_studies", 
-           add = "reg.line", conf.int = TRUE, 
-           cor.coef = TRUE, cor.method = "pearson",
-           xlab = "suitability", ylab = "n_studies")
-
-ggscatter( subset(correlation, REGION_UN=="Europe"), x = "MEAN", y = "n_studies", 
-           add = "reg.line", conf.int = TRUE, 
-           cor.coef = TRUE, cor.method = "pearson",
-           xlab = "suitability", ylab = "n_studies")
-
-ggscatter( subset(correlation, REGION_UN=="Oceania"), x = "MEAN", y = "n_studies", 
-           add = "reg.line", conf.int = TRUE, 
-           cor.coef = TRUE, cor.method = "pearson",
-           xlab = "suitability", ylab = "n_studies")
-
-
 profitability_fill<-  c("0_0"="grey99",
                         "0_0.01-0.0755"="grey99",
                         "0_0.0755-0.1995" ="#FEC9C0",
-                        "0_0.1995-0.2978"="#FD9382",
-                        "0_0.2978-0.3185"="#FC5C43",
-                        "0_0.3185+"  ="#fb2604",
+                        "0_0.1995-0.2978"="#FE8680",
+                        "0_0.2978-0.3185"="#FF4340",
+                        "0_0.3185+"  ="#FF0000",
                         
                         "1-5_0"  ="#a9cadd",
                         "1-5_0.01-0.0755"="#a9cadd",
-                        "1-5_0.0755-0.1995"="#C9BDBB",
-                        "1-5_0.1995-0.2978"="#D49882",
-                        "1-5_0.2978-0.3185" ="#E07448",
-                        "1-5_0.3185+"="#EC5010",
+                        "1-5_0.0755-0.1995"="#BFA6A7",
+                        "1-5_0.1995-0.2978"="#D48270",
+                        "1-5_0.2978-0.3185" ="#EA5D3A",
+                        "1-5_0.3185+"="#FF3903",
                         
                         "6-10_0"="#76b7e1",
                         "6-10_0.01-0.0755"="#76b7e1",
-                        "6-10_0.0755-0.1995"="#95B1B6",
-                        "6-10_0.1995-0.2978"="#AB9E82",
-                        "6-10_0.2978-0.3185" ="#C48C4D",
-                        "6-10_0.3185+"="#d48028",
+                        "6-10_0.0755-0.1995"="#98A6AB",
+                        "6-10_0.1995-0.2978"="#BB9574",
+                        "6-10_0.2978-0.3185" ="#DD833E",
+                        "6-10_0.3185+"="#FF7207",
                         
                         "11-25_0"="#4ba5e3",
                         "11-25_0.01-0.0755"="#4ba5e3",
-                        "11-25_0.0755-0.1995"="#60A4B1",
-                        "11-25_0.1995-0.2978"="#81A381",
-                        "11-25_0.2978-0.3185" ="#A7A352",
-                        "11-25_0.3185+"="#cba82a",
+                        "11-25_0.0755-0.1995"="#78A6AD",
+                        "11-25_0.1995-0.2978"="#A5A877",
+                        "11-25_0.2978-0.3185" ="#D2A940",
+                        "11-25_0.3185+"="#FFAA0A",
                         
                         "26-50_0"="#0f7fe1",
                         "26-50_0.01-0.0755"="#0f7fe1",
-                        "26-50_0.0755-0.1995"="#2b98ac",
-                        "26-50_0.1995-0.2978"="#58a881",
-                        "26-50_0.2978-0.3185" ="#8bbb57",
-                        "26-50_0.3185+"="#c0cf34",
+                        "26-50_0.0755-0.1995"="#58a881",
+                        "26-50_0.1995-0.2978"="#8bbb57",
+                        "26-50_0.2978-0.3185" ="#c0cf34",
+                        "26-50_0.3185+"="#ffe30d",
                         
                         "51-75_0"="#0f7fe1",
                         "51-75_0.01-0.0755"="#0f7fe1",
-                        "51-75_0.0755-0.1995"="#2b98ac",
-                        "51-75_0.1995-0.2978"="#58a881",
-                        "51-75_0.2978-0.3185" ="#8bbb57",
-                        "51-75_0.3185+"="#c0cf34")
-
-
+                        "51-75_0.0755-0.1995"="#58a881",
+                        "51-75_0.1995-0.2978"="#8bbb57",
+                        "51-75_0.2978-0.3185" ="#c0cf34",
+                        "51-75_0.3185+"="#ffe30d")
+                        
+                  
 plot_profitability_studies<-
   
   ggplot(data = world_profitability, aes(x = long, y = lat, group = group)) +
@@ -853,31 +838,6 @@ legend_profitability_studies<-ggplot(legend_profitability, aes(x = factor(x), y 
 legend_profitability_studies                       
 #13*5.5
 #9.32*7.68
-world_profitability.p<-world_profitability%>%
-  filter(REGION_UN!="0")
-
-ggplot(world_profitability.p, aes(x=MEAN, y=n_studies,color=studies_profitability_range,shape=REGION_UN )) +
-  geom_point(size=7) +
-  geom_text(aes(x=MEAN+0.02,label=region),check_overlap = TRUE)+
-  labs(y = "Number of studies", x = "Suitability for profitable diversified farming systems") +
-  scale_y_continuous(breaks= c(0,10,20,30,40,50,60,70),
-                     expand = c(0.2,0))+
-  scale_x_continuous(breaks= c(0,0.07,0.19,0.29,0.31,0.4,0.5,0.6,0.7),
-                     limits = c(0, 0.7),
-                     expand = c(0, 0)) +
-  scale_shape_manual(values=c(19, 17, 18,15,7,8))+
-  scale_color_manual(values = profitability_fill, guide="none") +
-  
-  theme(axis.title = element_text(color="black", size=16, family = "sans",face = "bold"),
-        axis.text = element_text(color="black", size=14, family = "sans"),
-        #axis.ticks= element_blank(),
-        legend.position = c(0.9,0.5,0.1,1),
-        axis.line = element_line(color="black"),
-        panel.background = element_blank(),
-        #panel.grid.major = element_blank(),
-        plot.margin = unit(c(t=0.5,r=0.5,b=0.5,l=0.5), "cm"))  
-
-
 subregions<-data_clean%>%
   group_by(m_un_subregion)%>%
   summarise(#n_models= n_distinct(study_model_id),
@@ -921,7 +881,7 @@ ggplot(subregion_profitability_dfs, aes(x=mean_subregion, y=n_studies,color=stud
   labs(y = "Number of studies", x = "Suitability for profitable diversified farming systems") +
   scale_y_continuous(breaks= c(0,10,20,30,40,50,60,70),
                      expand = c(0.2,0))+
-  scale_x_continuous(breaks= c(0,0.07,0.19,0.29,0.31,0.4,0.5,0.6,0.7),
+  scale_x_continuous(breaks= c(0,0.0755,0.1995,0.2978,0.3185,0.4,0.5,0.6,0.7),
                      limits = c(0, 0.7),
                      expand = c(0, 0)) +
   scale_shape_manual(values=c(19, 17, 18,15,7,8))+
@@ -930,17 +890,116 @@ ggplot(subregion_profitability_dfs, aes(x=mean_subregion, y=n_studies,color=stud
   theme(axis.title = element_text(color="black", size=16, family = "sans",face = "bold"),
         axis.text = element_text(color="black", size=14, family = "sans"),
         #axis.ticks= element_blank(),
-        legend.position = c(0.9,0.5,0.1,1),
+        legend.position = "none",
         axis.line = element_line(color="black"),
         panel.background = element_blank(),
         #panel.grid.major = element_blank(),
-        panel.grid.major.x = element_line(color = "grey75",
-                                          size = 0.5),
+        #panel.grid.major.x = element_line(color = "grey75",
+         #                                 size = 0.5),
         plot.margin = unit(c(t=0.5,r=0.5,b=0.5,l=0.5), "cm"))  
 
 #13*5.5
 #18*8.21
 landacape
+
+
+
+##### Graphical abstract ####
+library(ggsankey)
+
+region_factor_dp_practices<- data_clean%>%
+  select(study_model_id,factor_category, m_dp_recla,m_un_region,y_metric_recla_2)
+
+skey_region_factor_dp_practices <- region_factor_dp_practices %>%
+  make_long(factor_category,y_metric_recla_2,m_dp_recla,m_un_region)     
+
+sort(unique(skey_region_factor_dp_practices$node))
+sort(unique(skey_region_factor_dp_practices$next_node))
+skey_region_factor_dp_practices$node <- factor(skey_region_factor_dp_practices$node,
+                                               levels = c(
+                                                 "Other","P&I context\n(Value chain)","P&I context\n(Land tenure)", "P&I context\n(General)", "P&I context\n(Financial risk management)", 
+                                                 "Farmers' behaviour", "Social capital","Farm management","Biophysical context","Physical capital",
+                                                 "P&I context\n(Access to knowledge)","Financial capital","Natural capital", "Human capital",
+                                                 "awareness","dis-adoption","interest", "intensity of adoption","adoption",
+                                                 "Rotational grazing","Agro-aquaculture","Fallow", "Agro-silvopasture","Combined practices",
+                                                 "Embedded seminatural habitats", "Cover crops","Intercropping", "Crop rotation", "Agroforestry",
+                                                 "Europe","Latin America and the Caribbean","Asia","Northern America","Africa" 
+                                                 ))
+skey_region_factor_dp_practices$next_node <- factor(skey_region_factor_dp_practices$next_node,
+                                                    levels = c(
+                                                      "Other","P&I context\n(Value chain)","P&I context\n(Land tenure)", "P&I context\n(General)",
+                                                      "P&I context\n(Financial risk management)", 
+                                                      "Farmers' behaviour", "Social capital","Farm management","Biophysical context","Physical capital",
+                                                      "P&I context\n(Access to knowledge)","Financial capital","Natural capital", "Human capital",  
+                                                      "awareness","dis-adoption","interest", "intensity of adoption","adoption",
+                                                      "Rotational grazing","Agro-aquaculture","Fallow", "Agro-silvopasture","Combined practices",
+                                                      "Embedded seminatural habitats", "Cover crops","Intercropping", "Crop rotation", "Agroforestry",
+                                                      "Europe","Latin America and the Caribbean","Asia","Northern America","Africa" 
+                                                      
+                                                      ))
+
+
+
+fills <- c("adoption"="#DF5C24",
+           "awareness"="#009e73",
+           "interest"= "#f0e442",
+           "intensity of adoption"="#265DAB" ,
+           "dis-adoption"="#860dcf", 
+           
+           
+           "Africa"="#843272",
+           "Asia"="#b5562f",
+           "Northern America"="#5b6454",
+           "Latin America and the Caribbean"= "#f1ba41",
+           "Europe"="#743341",
+           "Biophysical context"= "#f0c602",
+           "Farm management"="#F09319",
+           "Farmers' behaviour"= "#ea6044",
+           "Financial capital"="#d896ff",
+           "Natural capital"=  "#87CEEB",
+           "Human capital"="#6a57b8",
+           "Physical capital"="#496491",
+           "P&I context\n(Value chain)"="#92c46d",
+           "P&I context\n(Land tenure)"="#92c46d",
+           "P&I context\n(General)"="#92c46d",
+           "P&I context\n(Financial risk management)"="#92c46d",
+           "P&I context\n(Access to knowledge)"="#92c46d",
+           "Social capital"= "#297d7d",
+           "Agroforestry"=  "#545454",
+           "Crop rotation"="#545454", 
+           "Cover crops"="#545454", 
+           "Fallow"="#545454",
+           "Intercropping"="#545454",
+           "Rotational grazing"="#545454",
+           "Combined practices"="#545454",
+           "Agro-aquaculture"="#545454",
+           "Embedded seminatural habitats"="#545454",
+           "Agro-silvopasture"="#545454")
+
+
+ggplot(skey_region_factor_dp_practices, 
+       aes(x = x,         next_x = next_x, node = node,
+           next_node = next_node,
+           fill = node,
+           colour=node),
+       label = node) +
+  geom_sankey(flow.alpha = 0.3,
+              #space = 15,
+              #node.color = "black",
+              show.legend = FALSE)+
+  scale_fill_manual(values= fills)+
+  scale_colour_manual(values= fills)+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_x_discrete(expand = c(0, 0))+
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    axis.text = element_blank(),
+    
+    axis.title = element_blank(), 
+    axis.ticks = element_blank(),
+    panel.background = element_rect(fill = "transparent"))
+#18*12 landscape
 
 ####################################################################
 
@@ -1104,6 +1163,9 @@ for (region in regions) {
   # Print the plot
   print(p)
 }
+
+
+
 
 
 ###############################
@@ -1817,5 +1879,4 @@ labs(y = "Height")+
 
 
 dendrogram_plot
-
 
