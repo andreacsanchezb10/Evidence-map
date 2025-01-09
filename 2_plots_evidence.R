@@ -736,7 +736,22 @@ correlation<- world_profitability%>%
   distinct(region,REGION_UN,SUBREGION,MEAN,n_studies)
 
 sort(unique(correlation$region))
+
+# Pearson correlation calculations between 'n_studies' and 'MEAN'
+cor.test(correlation$n_studies, correlation$MEAN, method = "pearson")  # Pearson's correlation
+Pearson's product-moment correlation
+
+data:  correlation$n_studies and correlation$MEAN
+t = 0.49081, df = 175, p-value = 0.6242
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.1110313  0.1835732
+sample estimates:
+      cor 
+0.0370765 
 write.csv(correlation,"C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/checked_data/evidence_paper/correlation.csv", row.names=FALSE)
+
+
 
 profitability_fill<-  c("0_0"="grey99",
                         "0_0.01-0.0755"="grey99",
@@ -900,7 +915,10 @@ ggplot(subregion_profitability_dfs, aes(x=mean_subregion, y=n_studies,color=stud
 
 #13*5.5
 #18*8.21
-landacape
+landscape
+
+
+
 
 
 
