@@ -8,6 +8,8 @@ library(cluster)
 library(grid)
 library(stringr)
 
+data_clean<-read.csv("C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/evidence_paper_data/evidence_map_data_clean.csv")
+
 ##### PLOTS ------ 
 #### Data distribution per year of publication ----
 year_total<- data_clean%>%
@@ -575,15 +577,15 @@ factors_stages<-data_clean%>%
 sort(unique(factors_stages$combined_fill))
 
 fill <- c("awareness_0"= "white","awareness_1-5"="#D5EEE1","awareness_6-10" ="#ACDCC2", "awareness_11-25"="#82CBA4" ,
-          "awareness_26-50"="#58BA85" ,"awareness_51-75"="#2FA867"  ,"awareness_76-100"="#059748" ,"awareness_total"="grey10",
+          "awareness_26-50"="#58BA85" ,"awareness_51-75"="#2FA867"  ,"awareness_76-100"="#059748" ,"awareness_total"="#545454",
           "interest_0"= "white","interest_1-5"="#FDFBE0","interest_6-10" ="#FAF6C0", "interest_11-25"="#F8F2A1" ,
-          "interest_26-50"="#F5ED81" ,"interest_51-75"="#F3E962"  ,"interest_76-100"="#F0E442" ,"interest_total"="grey10",
+          "interest_26-50"="#F5ED81" ,"interest_51-75"="#F3E962"  ,"interest_76-100"="#F0E442" ,"interest_total"="#545454",
           "adoption_0"= "white","adoption_1-5"="#FAE4DB","adoption_6-10" ="#F4C9B6", "adoption_11-25"="#EFAE92" ,
-          "adoption_26-50"="#EA926D" ,"adoption_51-75"="#E47749"  ,"adoption_76-100"="#DF5C24" ,"adoption_total"="grey10",
+          "adoption_26-50"="#EA926D" ,"adoption_51-75"="#E47749"  ,"adoption_76-100"="#DF5C24" ,"adoption_total"="#545454",
           "intensity of adoption_0"= "white","intensity of adoption_1-5"="#DBE4F1","intensity of adoption_6-10" ="#B7C9E3", "intensity of adoption_11-25"="#93AED5" ,
-          "intensity of adoption_26-50"="#6E93C7" ,"intensity of adoption_51-75"="#4A78B9"  ,"intensity of adoption_76-100"="#265DAB" ,"intensity of adoption_total"="grey10",
+          "intensity of adoption_26-50"="#6E93C7" ,"intensity of adoption_51-75"="#4A78B9"  ,"intensity of adoption_76-100"="#265DAB" ,"intensity of adoption_total"="#545454",
           "dis-adoption_0"= "white","dis-adoption_1-5"="#E9DEEE","dis-adoption_6-10" ="#D3BDDC", "dis-adoption_11-25"="#BD9DCB" ,
-          "dis-adoption_26-50"="#A77CB9" ,"dis-adoption_51-75"="#915BA8"  ,"dis-adoption_76-100"="#7B3A96" ,"dis-adoption_total"="grey10")
+          "dis-adoption_26-50"="#A77CB9" ,"dis-adoption_51-75"="#915BA8"  ,"dis-adoption_76-100"="#7B3A96" ,"dis-adoption_total"="#545454")
 
 colour <-  c("awareness_0"= "black","awareness_1-5"="black","awareness_6-10" ="black", "awareness_11-25"="black" ,
              "awareness_26-50"="black" ,"awareness_51-75"="black"  ,"awareness_76-100"="black" ,"awareness_total"="grey90",
@@ -739,16 +741,16 @@ sort(unique(correlation$region))
 
 # Pearson correlation calculations between 'n_studies' and 'MEAN'
 cor.test(correlation$n_studies, correlation$MEAN, method = "pearson")  # Pearson's correlation
-Pearson's product-moment correlation
+#Pearson's product-moment correlation
 
-data:  correlation$n_studies and correlation$MEAN
-t = 0.49081, df = 175, p-value = 0.6242
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- -0.1110313  0.1835732
-sample estimates:
-      cor 
-0.0370765 
+#data:  correlation$n_studies and correlation$MEAN
+#t = 0.49081, df = 175, p-value = 0.6242
+#alternative hypothesis: true correlation is not equal to 0
+#95 percent confidence interval:
+# -0.1110313  0.1835732
+#sample estimates:
+#      cor 
+#0.0370765 
 write.csv(correlation,"C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/checked_data/evidence_paper/correlation.csv", row.names=FALSE)
 
 

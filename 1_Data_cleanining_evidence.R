@@ -4,7 +4,7 @@ library(dplyr)
 
 
 # Set the file path and name of the .xlsx file -------
-data_path <- "C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/checked_data/evidence_paper/"
+data_path <- "C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/evidence_paper_data/"
 
 # Read the data into a data frame
 data <- read_excel(paste0(data_path,"Meta_data_2024.02.15.xlsx"), sheet = "meta_PCC")
@@ -77,7 +77,7 @@ table(data_clean$m_dp_recla)
 ####### Countries -------
 sort(unique(data_clean$country)) #49
 
-UN_region <- read_excel("C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/meta-analysis/1_chapter_effect_size/UN_region.xlsx", sheet = "UN_subregion")%>%
+UN_region <- read_excel("C:/Users/andreasanchez/OneDrive - CGIAR/2_chapter_PhD/meta-analysis/1_chapter_effect_size/UN_region.xlsx", sheet = "UN_subregion")%>%
   mutate(Country_Name= if_else(Country_Name == "United States of America (The)","USA",
                                if_else(Country_Name == "Democratic Rep. of the Congo (The)","Democratic Republic of the Congo",
                                        if_else(Country_Name =="United Republic of Tanzania (The)","Tanzania",
@@ -119,4 +119,4 @@ length(unique(data_clean$study_id)) #189 studies
 sort(unique(data_clean$country[data_clean$m_un_subregion %in% c("Central America")]))
 table(data_clean$country,data_clean$m_un_subregion)
 
-write.csv(data_clean,"C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/checked_data/evidence_paper/evidence_map_data_clean.csv", row.names=FALSE)
+write.csv(data_clean,"C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/evidence_paper_data/evidence_map_data_clean.csv", row.names=FALSE)
