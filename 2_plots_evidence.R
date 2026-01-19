@@ -633,6 +633,121 @@ p_factor_stages<-
 p_factor_stages
 #12.55*8.21 landscape
 
+#### Data distribution per factor category per DFS ----
+# Define breaks and labels
+breaks <- c(0,1,6,11,26,51,76)  # Adjusted to ensure it covers all data
+labels <- c("0","1-5", "6-10", "11-25", "26-50", "51-75","76-100")
+
+systems_models <- data_clean %>%
+  select(study_model_id, m_dp_recla) %>%
+  distinct(study_model_id, m_dp_recla) %>%
+  group_by(m_dp_recla) %>%
+  summarise(n_models = n_distinct(study_model_id), .groups = "drop")%>%
+  mutate(total_models= sum(n_models))%>%
+  mutate(factor_category="Total number of models")%>%
+  mutate(percentage= n_models,
+         n_percentage_range= "total")
+
+factors_systems<-data_clean%>%
+  group_by(m_dp_recla,factor_category)%>%
+  summarise(n_models= n_distinct(study_model_id))%>%
+  ungroup()%>%
+  complete(m_dp_recla, factor_category, fill = list(n_models = 0))%>%
+  left_join(systems_models %>% select(n_models,m_dp_recla)%>% rename(total_models = n_models), by = "m_dp_recla")%>%
+  mutate(percentage = (n_models / total_models) * 100)%>%  # Calculate percentage with one decimal
+  mutate(percentage = round(percentage,0))%>%
+  mutate(n_percentage_range = cut(percentage, 
+                                  breaks = c(breaks, Inf), 
+                                  labels = labels, 
+                                  right = FALSE))%>%
+  rbind(systems_models)%>%
+  mutate(combined_fill =  paste(m_dp_recla, n_percentage_range, sep = "_"))%>%
+  mutate(percentage=if_else(factor_category!="Total number of models",paste0(percentage,"%"), as.character(percentage)))
+sort(unique(factors_systems$combined_fill))
+
+fill <- c("Agro-aquaculture_0"= "white","Agro-aquaculture_1-5"="#E7E7E7","Agro-aquaculture_6-10"= "#CECECE" ,"Agro-aquaculture_11-25"="#B6B6B6",
+          "Agro-aquaculture_26-50"="#9D9D9D","Agro-aquaculture_51-75"="#858585","Agro-aquaculture_76-100"="#6C6C6C","Agro-aquaculture_total" ="#545454",
+          "Agro-silvopasture_0"="white",  "Agro-silvopasture_1-5"="#E7E7E7",   "Agro-silvopasture_6-10"= "#CECECE","Agro-silvopasture_11-25"="#B6B6B6", 
+          "Agro-silvopasture_26-50" ="#9D9D9D", "Agro-silvopasture_51-75"="#858585" ,"Agro-silvopasture_76-100"="#6C6C6C", "Agro-silvopasture_total" ="#545454",            
+          "Agroforestry_0" = "white", "Agroforestry_6-10" ="#E7E7E7","Agroforestry_11-25"="#B6B6B6",
+          "Agroforestry_26-50"="#9D9D9D", "Agroforestry_51-75" ="#858585", "Agroforestry_76-100" ="#6C6C6C", "Agroforestry_total"="#545454", 
+          "Combined practices_0"= "white","Combined practices_1-5"="#E7E7E7","Combined practices_6-10"= "#CECECE" ,"Combined practices_11-25"="#B6B6B6",
+          "Combined practices_26-50" ="#9D9D9D", "Combined practices_51-75"="#858585" ,"Combined practices_76-100" ="#6C6C6C","Combined practices_total"="#545454",
+          "Cover crops_0" = "white", "Cover crops_1-5" ="#E7E7E7","Cover crops_6-10" = "#CECECE" ,"Cover crops_11-25" = "#B6B6B6",                   
+          "Cover crops_26-50" = "#9D9D9D","Cover crops_51-75" ="#858585","Cover crops_76-100"   ="#6C6C6C","Cover crops_total" ="#545454", 
+          "Crop rotation_0"= "white","Crop rotation_1-5" ="#E7E7E7","Crop rotation_6-10" = "#CECECE" ,"Crop rotation_11-25"="#B6B6B6", 
+          "Crop rotation_26-50"="#9D9D9D","Crop rotation_51-75" ="#858585","Crop rotation_76-100"="#6C6C6C","Crop rotation_total" ="#545454",
+          "Embedded seminatural habitats_0" = "white", "Embedded seminatural habitats_1-5" ="#E7E7E7","Embedded seminatural habitats_6-10"= "#CECECE" ,
+          "Embedded seminatural habitats_11-25" ="#B6B6B6","Embedded seminatural habitats_26-50" ="#9D9D9D","Embedded seminatural habitats_51-75"="#858585",
+          "Embedded seminatural habitats_76-100"="#6C6C6C","Embedded seminatural habitats_total" ="#545454",
+          "Fallow_0" = "white","Fallow_1-5" ="#E7E7E7","Fallow_6-10" = "#CECECE" ,"Fallow_11-25" = "#B6B6B6","Fallow_26-50"= "#9D9D9D",
+          "Fallow_51-75"  ="#858585" ,"Fallow_76-100" ="#6C6C6C","Fallow_total"="#545454", 
+          "Intercropping_0"= "white","Intercropping_1-5"="#E7E7E7","Intercropping_6-10" = "#CECECE" , "Intercropping_11-25"  = "#B6B6B6",  
+          "Intercropping_26-50"= "#9D9D9D","Intercropping_51-75"  ="#858585" , "Intercropping_76-100" ="#6C6C6C","Intercropping_total"  ="#545454", 
+          "Rotational grazing_0" ="white","Rotational grazing_1-5" ="#E7E7E7","Rotational grazing_6-10" = "#CECECE" ,"Rotational grazing_11-25"="#B6B6B6",          
+          "Rotational grazing_26-50" = "#9D9D9D", "Rotational grazing_51-75"="#858585" ,"Rotational grazing_76-100"  ="#6C6C6C", "Rotational grazing_total"  ="#545454")         
+  
+ colour <-  c("Agro-aquaculture_0"= "black","Agro-aquaculture_1-5"="black","Agro-aquaculture_6-10"= "black" ,"Agro-aquaculture_11-25"="black",
+              "Agro-aquaculture_26-50"="black","Agro-aquaculture_51-75"="black","Agro-aquaculture_76-100"="black","Agro-aquaculture_total" ="grey90",
+              "Agro-silvopasture_0"="black",  "Agro-silvopasture_1-5"="black",   "Agro-silvopasture_6-10"= "black","Agro-silvopasture_11-25"="black", 
+              "Agro-silvopasture_26-50" ="black", "Agro-silvopasture_51-75"="black" ,"Agro-silvopasture_76-100"="black", "Agro-silvopasture_total" ="grey90",            
+              "Agroforestry_0" = "black", "Agroforestry_6-10" ="black","Agroforestry_11-25"="black",
+              "Agroforestry_26-50"="black", "Agroforestry_51-75" ="black", "Agroforestry_76-100" ="black", "Agroforestry_total"="grey90", 
+              "Combined practices_0"= "black","Combined practices_1-5"="black","Combined practices_6-10"= "black" ,"Combined practices_11-25"="black",
+              "Combined practices_26-50" ="black", "Combined practices_51-75"="black" ,"Combined practices_76-100" ="black","Combined practices_total"="grey90",
+              "Cover crops_0" = "black", "Cover crops_1-5" ="black","Cover crops_6-10" = "black" ,"Cover crops_11-25" = "black",                   
+              "Cover crops_26-50" = "black","Cover crops_51-75" ="black","Cover crops_76-100"   ="black","Cover crops_total" ="grey90", 
+              "Crop rotation_0"= "black","Crop rotation_1-5" ="black","Crop rotation_6-10" = "black" ,"Crop rotation_11-25"="black", 
+              "Crop rotation_26-50"="black","Crop rotation_51-75" ="black","Crop rotation_76-100"="black","Crop rotation_total" ="grey90",
+              "Embedded seminatural habitats_0" = "black", "Embedded seminatural habitats_1-5" ="black","Embedded seminatural habitats_6-10"= "black" ,
+              "Embedded seminatural habitats_11-25" ="black","Embedded seminatural habitats_26-50" ="black","Embedded seminatural habitats_51-75"="black",
+              "Embedded seminatural habitats_76-100"="black","Embedded seminatural habitats_total" ="grey90",
+              "Fallow_0" = "black","Fallow_1-5" ="black","Fallow_6-10" = "black" ,"Fallow_11-25" = "black","Fallow_26-50"= "black",
+              "Fallow_51-75"  ="black" ,"Fallow_76-100" ="black","Fallow_total"="grey90", 
+              "Intercropping_0"= "black","Intercropping_1-5"="black","Intercropping_6-10" = "black" , "Intercropping_11-25"  = "black",  
+              "Intercropping_26-50"= "black","Intercropping_51-75"  ="black" , "Intercropping_76-100" ="black","Intercropping_total"  ="grey90", 
+              "Rotational grazing_0" ="black","Rotational grazing_1-5" ="black","Rotational grazing_6-10" = "black" ,"Rotational grazing_11-25"="black",          
+              "Rotational grazing_26-50" = "black", "Rotational grazing_51-75"="black" ,"Rotational grazing_76-100"  ="black", "Rotational grazing_total"  ="grey90")         
+   
+   
+
+p_factor_systems<-
+  ggplot(factors_systems,aes(
+    x=factor(m_dp_recla, levels = c("Agro-aquaculture","Agro-silvopasture","Agroforestry","Combined practices",
+                                    "Cover crops","Crop rotation","Embedded seminatural habitats","Fallow","Intercropping","Rotational grazing")),
+    y=factor(factor_category, levels =c("Total number of models","Other","P&I context\n(Value chain)","P&I context\n(General)",
+                                        "P&I context\n(Land tenure)","Farm management", 
+                                        "P&I context\n(Financial risk management)","Farmers' behaviour",
+                                        "Social capital","Biophysical context","Physical capital", 
+                                        "P&I context\n(Access to knowledge)","Financial capital",
+                                        "Natural capital","Human capital")),
+    fill=combined_fill, color = combined_fill))+
+  geom_tile() +
+  scale_fill_manual(values = fill) +
+  scale_color_manual(values = colour) +
+  
+  geom_text(aes(label=percentage), color="black",size=4,family = "sans")+
+  scale_x_discrete(labels=c("Agro-aquaculture","Agro-silvopasture","Agroforestry","Combined practices",
+                            "Cover crops","Crop rotation","Embedded seminatural habitats","Fallow","Intercropping","Rotational grazing"),
+                   position = "top")+
+  scale_y_discrete(labels=c("Total number of models","Other","P&I context\n(Value chain)","P&I context\n(General)",
+                            "P&I context\n(Land tenure)","Farm management", 
+                            "P&I context\n(Financial risk management)","Farmers' behaviour",
+                            "Social capital","Biophysical context","Physical capital", 
+                            "P&I context\n(Access to knowledge)","Financial capital",
+                            "Natural capital","Human capital"))+
+  theme(axis.title = element_blank(),
+        axis.text.x = element_text(color="black", size=12, family = "sans",hjust=0.5, vjust = 0.5),
+        axis.text.y =element_text(color="black", size=11, family = "sans",hjust=1),
+        axis.ticks= element_blank(),
+        legend.position = "none",
+        axis.line = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(),
+        plot.margin = unit(c(t=0.5,r=0,b=0.5,l=0), "cm"))   
+p_factor_systems
+#12.55*8.21 landscape
+
 
 #### Comparison profitability of diversified farming systems and adoption studies -----
 profitability_dfs <- read.csv("C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/Environmental_evidence/Kamau/data/mean_profitability_dfs.csv", 
