@@ -770,6 +770,24 @@ profitability_dfs <- read.csv("C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter
 sort(unique(profitability_dfs$NAME_LONG))
 #204 countries
 
+
+
+UN_region <- read_excel("C:/Users/andreasanchez/OneDrive - CGIAR/2_chapter_PhD/meta-analysis/1_chapter_effect_size/UN_region.xlsx", sheet = "UN_subregion")%>%
+  mutate(Country_Name= if_else(Country_Name == "United States of America (The)","USA",
+                               if_else(Country_Name == "Democratic Rep. of the Congo (The)","Democratic Republic of the Congo",
+                                       if_else(Country_Name =="United Republic of Tanzania (The)","Tanzania",
+                                               if_else(Country_Name =="Bolivia (Plurinational State of)","Bolivia",
+                                                       if_else(Country_Name == "Sudan (The)", "Sudan",
+                                                               if_else(Country_Name=="Republic of Moldova (The)", "Moldova",
+                                                                       if_else(Country_Name=="Philippines (The)", "Philippines",
+                                                                               if_else(Country_Name=="Viet Nam", "Vietnam",
+                                                                                       if_else(Country_Name == "Iran (Islamic Republic of)", "Iran",
+                                                                                               if_else(Country_Name == "Niger (The)","Niger",
+                                                                                                       Country_Name)))))))))))%>%
+  dplyr::select(Country_Name, UN_Regions, UN_sub_region,Developed_Developing)%>%
+  dplyr::rename("m_un_region"="UN_Regions",
+                "m_un_subregion"="UN_sub_region")
+
 #Kamau et al
 #thresholds
 #Balance training omission, predicted area and threshold value Cloglog threshold = 0.0755
