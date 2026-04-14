@@ -750,7 +750,7 @@ p_factor_systems
 
 
 #### Comparison profitability of diversified farming systems and adoption studies -----
-profitability_dfs <- read.csv("C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/Environmental_evidence/Kamau/data/mean_profitability_dfs.csv", 
+profitability_dfs <- read.csv("C:/Users/andreasanchez/OneDrive - CGIAR/1_chapter_PhD/Kamau/data/mean_profitability_dfs.csv", 
                               sep=",", header = TRUE)%>%
   select(NAME_LONG, MEAN, REGION_UN, SUBREGION)%>%
   filter(!is.na(MEAN))%>%
